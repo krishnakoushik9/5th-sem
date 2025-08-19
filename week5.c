@@ -21,4 +21,19 @@ void broadcastTree(int root) {
                 printf("Host %d -> %d\n",current + 1,j+1);
             }
         }
+    }
+}
+int main(){
+    int i ,j,root;
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+    printf("Enter the adjacency matrix:\n");
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < n; j++) {
+            printf("Enter connecting of %d --> %d::",i+1,j+1);
+            scanf("%d", &a[i][j]);
+        }
+    }
+    printf("Enter the root node: ");
+    
 }
