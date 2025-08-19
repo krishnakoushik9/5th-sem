@@ -36,6 +36,6 @@ int main(){
     }
     printf("Enter the root node: ");
     scanf("%d", &root);
-    broadcastTree(root - 1); // Adjust for 0-based index
+    broadcastTree(root - 1);
     return 0;
 }
