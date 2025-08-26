@@ -18,6 +18,7 @@ int main(){
     for(i = 0;i < noadj;i++){
         printf("\n Enter time delay from %c to all other nodes: ",adver[i]);
         for(j = 0;j < nv;j++){
+            //Hey
             scanf("%d",&tde1[i][j]);
         }
     }
