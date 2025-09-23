@@ -51,7 +51,6 @@ int main() {
     }
     printf("\nEnter the output rate (packets per time unit): ");
     scanf("%d", &outputrate);
-    printf("\nResults:");
     leaky_bucket(incoming, n, outputrate);
     
     return 0;
