@@ -1,10 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .container {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header button {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .calendar-header button:hover {
+            background: #333333;
+        }
+
+        .calendar-header h2 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .calendar-day:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+        }
+
+        .calendar-day.selected {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .calendar-day.other-month {
+            color: #cccccc;
+        }
+
+        .calendar-day.has-meals {
+            background: #f0f0f0;
+            font-weight: 600;
+        }
+
+        .calendar-day.has-meals.selected {
+            background: #000000;
+        }
+
+        /* Meal Entry Section */
+        .meal-section {
+            border-top: 2px solid #e0e0e0;
+            padding-top: 30px;
+        }
+
+        .selected-date {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .meal-input-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .add-meal-btn {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            align-self: flex-end;
+            transition: background 0.2s;
+        }
+
+        .add-meal-btn:hover {
+            background: #333333;
+        }
+
+        /* Meals List */
+        .meals-list {
+            margin-top: 20px;
+        }
+
+        .meals-list h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .meal-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+
+        .meal-info {
+            flex: 1;
+        }
+
+        .meal-time {
+            font-weight: 600;
+            font-size: 14px;
+            color: #000000;
+        }
+
+        .meal-dish {
+            font-size: 14px;
+            color: #666666;
+            margin-top: 4px;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666666;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .no-meals {
+            text-align: center;
+            padding: 30px;
+            color: #999999;
+            font-size: 14px;
+        }
+
+        .today-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+        }
+
+        .today-btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<h1>
+    <a href="/" class="back-to-chat-btn">←Chat</a>
+    Meal Calendar
+</h1>
+
+<div class="container">
+    <!-- Calendar -->
+    <div class="calendar-header">
+        <button id="prev-month">← Prev</button>
+        <h2 id="current-month"></h2>
+        <button id="next-month">Next →</button>
+        <button class="today-btn" id="today-btn">Today</button>
+    </div>
+
+    <div class="calendar-grid" id="calendar-grid">
+        <div class="calendar-day-header">Sun</div>
+        <div class="calendar-day-header">Mon</div>
+        <div class="calendar-day-header">Tue</div>
+        <div class="calendar-day-header">Wed</div>
+        <div class="calendar-day-header">Thu</div>
+        <div class="calendar-day-header">Fri</div>
+        <div class="calendar-day-header">Sat</div>
+    </div>
+
+    <!-- Meal Entry Section -->
+    <div class="meal-section">
+        <div class="selected-date" id="selected-date">Select a date</div>
+
+        <div class="meal-input-form">
+            <div class="input-group">
+                <label for="meal-time">Time</label>
+                <input type="time" id="meal-time" required>
+            </div>
+            <div class="input-group">
+                <label for="meal-dish">Dish Name</label>
+                <input type="text" id="meal-dish" placeholder="Enter dish name" required>
+            </div>
+            <button class="add-meal-btn" id="add-meal-btn">Add Meal</button>
+        </div>
+
+        <div class="meals-list">
+            <h3>Meals for this day</h3>
+            <div id="meals-container">
+                <div class="no-meals">No meals logged yet</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentDate = new Date();
+    let selectedDate = null;
+    let mealsData = {};
+
+    // Load data from localStorage
+    function loadMealsData() {
+        const stored = localStorage.getItem('mealCalendarData');
+        if (stored) {
+            mealsData = JSON.parse(stored);
+        }
+    }
+
+    // Save data to localStorage
+    function saveMealsData() {
+        localStorage.setItem('mealCalendarData', JSON.stringify(mealsData));
+    }
+
+    // Format date as YYYY-MM-DD
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Format date for display
+    function formatDisplayDate(dateStr) {
+        const date = new Date(dateStr + 'T00:00:00');
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    // Render calendar
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        // Update header
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+        document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+
+        // Get first day of month and number of days
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+        const grid = document.getElementById('calendar-grid');
+
+        // Remove existing day cells (keep headers)
+        const existingDays = grid.querySelectorAll('.calendar-day');
+        existingDays.forEach(day => day.remove());
+
+        // Add previous month's days
+        for (let i = firstDay - 1; i >= 0; i--) {
+            const day = daysInPrevMonth - i;
+            const date = new Date(year, month - 1, day);
+            const dayEl = createDayElement(date, true);
+            grid.appendChild(dayEl);
+        }
+
+        // Add current month's days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const dayEl = createDayElement(date, false);
+            grid.appendChild(dayEl);
+        }
+
+        // Add next month's days to fill grid
+        const totalCells = firstDay + daysInMonth;
+        const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let day = 1; day <= remainingCells; day++) {
+            const date = new Date(year, month + 1, day);
+            const dayEl = createDayElement(date, true);
+            grid.appendChild(dayEl);
+        }
+    }
+
+    // Create day element
+    function createDayElement(date, isOtherMonth) {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'calendar-day';
+        dayEl.textContent = date.getDate();
+
+        if (isOtherMonth) {
+            dayEl.classList.add('other-month');
+        }
+
+        const dateStr = formatDate(date);
+
+        // Check if this date has meals
+        if (mealsData[dateStr] && mealsData[dateStr].length > 0) {
+            dayEl.classList.add('has-meals');
+        }
+
+        // Check if selected
+        if (selectedDate && dateStr === formatDate(selectedDate)) {
+            dayEl.classList.add('selected');
+        }
+
+        dayEl.addEventListener('click', () => {
+            selectedDate = date;
+            renderCalendar();
+            renderMealSection();
+        });
+
+        return dayEl;
+    }
+
+    // Render meal section
+    function renderMealSection() {
+        if (!selectedDate) {
+            document.getElementById('selected-date').textContent = 'Select a date';
+            document.getElementById('meals-container').innerHTML = '<div class="no-meals">No meals logged yet</div>';
+            return;
+        }
+
+        const dateStr = formatDate(selectedDate);
+        document.getElementById('selected-date').textContent = formatDisplayDate(dateStr);
+
+        const meals = mealsData[dateStr] || [];
+        const container = document.getElementById('meals-container');
+
+        if (meals.length === 0) {
+            container.innerHTML = '<div class="no-meals">No meals logged yet</div>';
+            return;
+        }
+
+        // Sort meals by time
+        meals.sort((a, b) => a.time.localeCompare(b.time));
+
+        container.innerHTML = '';
+        meals.forEach((meal, index) => {
+            const mealEl = document.createElement('div');
+            mealEl.className = 'meal-entry';
+            mealEl.innerHTML = `
+                <div class="meal-info">
+                    <div class="meal-time">${meal.time}</div>
+                    <div class="meal-dish">${meal.dish}</div>
+                </div>
+                <button class="delete-btn" data-index="${index}">Delete</button>
+            `;
+            container.appendChild(mealEl);
+        });
+
+        // Add delete listeners
+        container.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                deleteMeal(dateStr, index);
+            });
+        });
+    }
+
+    // Add meal
+    function addMeal() {
+        if (!selectedDate) {
+            alert('Please select a date first');
+            return;
+        }
+
+        const timeInput = document.getElementById('meal-time');
+        const dishInput = document.getElementById('meal-dish');
+
+        const time = timeInput.value;
+        const dish = dishInput.value.trim();
+
+        if (!time || !dish) {
+            alert('Please enter both time and dish name');
+            return;
+        }
+
+        const dateStr = formatDate(selectedDate);
+
+        if (!mealsData[dateStr]) {
+            mealsData[dateStr] = [];
+        }
+
+        mealsData[dateStr].push({ time, dish });
+        saveMealsData();
+
+        // Clear inputs
+        timeInput.value = '';
+        dishInput.value = '';
+
+        // Re-render
+        renderCalendar();
+        renderMealSection();
+    }
+
+    // Delete meal
+    function deleteMeal(dateStr, index) {
+        if (confirm('Delete this meal entry?')) {
+            mealsData[dateStr].splice(index, 1);
+
+            // Remove date key if no meals left
+            if (mealsData[dateStr].length === 0) {
+                delete mealsData[dateStr];
+            }
+
+            saveMealsData();
+            renderCalendar();
+            renderMealSection();
+        }
+    }
+
+    // Event listeners
+    document.getElementById('prev-month').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('next-month').addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    document.getElementById('today-btn').addEventListener('click', () => {
+        currentDate = new Date();
+        selectedDate = new Date();
+        renderCalendar();
+        renderMealSection();
+    });
+
+    document.getElementById('add-meal-btn').addEventListener('click', addMeal);
+
+    // Allow Enter key to submit
+    document.getElementById('meal-dish').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addMeal();
+        }
+    });
+
+    // Initialize
+    loadMealsData();
+    selectedDate = new Date(); // Auto-select today
+    renderCalendar();
+    renderMealSection();
+</script>
+
 </body>
 </html>

@@ -1,4 +1,4 @@
 package com.krsna.project.demo.dto;
 
-public class ChatMessage {
+public record ChatMessage(String role, String content) {
 }

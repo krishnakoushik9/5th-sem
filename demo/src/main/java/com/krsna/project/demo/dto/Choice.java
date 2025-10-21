@@ -1,4 +1,4 @@
 package com.krsna.project.demo.dto;
 
-public class Choice {
+public record Choice(ChatMessage message) {
 }
