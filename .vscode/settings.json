@@ -1,6 +1,10 @@
 {
     "cSpell.words": [
         "adver",
+        "crossentropy",
+        "cvscores",
+        "datagen",
+        "kfold",
         "noadj",
         "nodej",
         "outputrate"
