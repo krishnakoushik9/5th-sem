@@ -14,6 +14,7 @@ int main() {
     scanf("%d", &n);
     getchar(); // Consume the newline character
     Frame buffer[n];
+    //CN LAB
     printf("Enter the frame numbers and data (out of order):\n");
     for(int i = 0; i < n; i++) {
         printf("Frame %d number: ", i + 1);
