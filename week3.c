@@ -39,8 +39,8 @@ int main(){
                 printf("Retransmitting frames from %d to %d\n", base - Window_size, base - 1);
                 base -= Window_size; 
             }
-        }
-    }
+        }ppppppppppppppppppppppppppppppppppppppp
+    }pppppppppp
     
     printf("\nTransmission completed successfully!\n");
     return 0;
